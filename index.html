@@ -77,14 +77,14 @@ numbers.forEach(System.out::println);
 					<section>
 						<h3>Eliminating Mutability</h3>
 <pre><code data-trim>
-    List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5, 6);
+List&lt;Integer> numbers = Arrays.asList(1, 2, 3, 4, 5, 6);
 
-    int totalOfValuesDoubled = 0;
-    for(int number : numbers) {
-      totalOfValuesDoubled += number * 2;
-    }
-    
-    System.out.println(totalOfValuesDoubled);
+int totalOfValuesDoubled = 0;
+for(int number : numbers) {
+	totalOfValuesDoubled += number * 2;
+}
+
+System.out.println(totalOfValuesDoubled);
 </code></pre>
     
 <pre class="fragment"><code data-trim>
@@ -92,6 +92,88 @@ numbers.forEach(System.out::println);
       numbers.stream()
       .map(number -> number * 2)
       .sum());
+</code></pre>
+					</section>
+					<section>
+						<h3>Implementing Strategies</h3>
+<pre><code data-trim>
+public class Asset {
+  public enum AssetType { STOCK, BOND };
+  
+  public final AssetType type;
+  public final int value;
+  
+  public Asset(AssetType assetType, int assetValue) {
+    type = assetType;
+    value = assetValue;
+  }
+}
+</code></pre>
+					</section>
+					<section>
+						<h3>The Old Way</h3>
+<pre><code data-trim>
+  public static void totalAssets(List&lt;Asset> assets) {
+    int total = 0;
+    for(Asset asset : assets) {
+      total += asset.value;
+    }
+    System.out.println(total);
+  }
+</code></pre>
+  
+<pre><code data-trim>
+  public static void totalStockAssets(List&lt;Asset> assets) {
+    int total = 0;
+    for(Asset asset : assets) {
+      if(asset.type == Asset.AssetType.STOCK)
+        total += asset.value;
+    }
+    System.out.println(total);    
+  }
+</code></pre>
+
+<pre><code data-trim>
+  public static void totalBondAssets(List&lt;Asset> assets) {
+    int total = 0;
+    for(Asset asset : assets) {
+      if(asset.type == Asset.AssetType.BOND)
+        total += asset.value;
+    }
+    System.out.println(total);    
+  }
+</code></pre>
+					</section>
+  
+					<section>
+						<h3>The New Way</h3>
+<pre><code data-trim>
+public static void totalAssets(
+		List&lt;Asset> assets, 
+		Predicate&lt;Asset> selector) {
+	System.out.println(
+		assets.stream()
+		.filter(selector)
+		.map(asset -> asset.value)
+		.sum());
+}
+</code></pre>
+  
+<pre><code data-trim>
+public static void main(String[] args) {
+	List&lt;Asset> assets = Arrays.asList(
+		new Asset(Asset.AssetType.STOCK, 100),
+		new Asset(Asset.AssetType.BOND,  200),
+		new Asset(Asset.AssetType.STOCK, 300),
+		new Asset(Asset.AssetType.BOND,  400)
+);
+</code></pre>
+    
+    
+<pre><code data-trim>
+totalAssets(assets, asset -> true);
+totalAssets(assets, asset -> asset.type == Asset.AssetType.STOCK);
+totalAssets(assets, asset -> asset.type == Asset.AssetType.BOND);
 </code></pre>
 					</section>
 				</section>
