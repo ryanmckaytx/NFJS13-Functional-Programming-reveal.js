@@ -55,25 +55,30 @@
 List&lt;Integer&gt; numbers = Arrays.asList(1, 2, 3, 4, 5, 6);
 
 for(int i = 0; i &lt; numbers.size(); i++) { 
-	System.out.println(i); 
+    System.out.println(i); 
 }
 
 for(int e : numbers) { 
-	System.out.println(e); 
+    System.out.println(e); 
 }
 </code></pre>
 
 <pre class="fragment"><code data-trim>
+// forEach is a default method in Iterable interface
 numbers.forEach(new Consumer&lt;Integer&gt;() {
-	public void accept(Integer number) { 
-		System.out.println(number); 
-	}
+    public void accept(Integer number) { 
+        System.out.println(number); 
+    }
 });
 
+// because Consumer is a Functional Interface, 
+// anonymous class can be replaced by lambda expression
 numbers.forEach((Integer number) -&gt; System.out.println(number));
 
+// parameters' data types can be omitted
 numbers.forEach(number -&gt; System.out.println(number));
 
+// Method reference syntax
 numbers.forEach(System.out::println);
 </code></pre>
 					</section>
@@ -84,7 +89,7 @@ List&lt;Integer> numbers = Arrays.asList(1, 2, 3, 4, 5, 6);
 
 int totalOfValuesDoubled = 0;
 for(int number : numbers) {
-	totalOfValuesDoubled += number * 2;
+    totalOfValuesDoubled += number * 2;
 }
 
 System.out.println(totalOfValuesDoubled);
@@ -537,6 +542,7 @@ def alternateLength = volume.curry(1).curry(1) // currying
 					</section>
 				</section>
 				<section>
+					<a href="http://docs.oracle.com/javase/tutorial/java/javaOO/lambdaexpressions.html">Lambda Expressions in Java 8</a>
 					<h3>Functional Thinking References:</h3>
 					<h4>Neal Ford</h4>
 					<a href="http://www.ibm.com/developerworks/java/library/j-ft1/index.html">functional thinking @ ibm.com</a><br />
