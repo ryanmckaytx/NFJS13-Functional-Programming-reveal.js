@@ -43,12 +43,17 @@
 				</section>
 
 					<section>
-						<h3>Java 8 Capabilities</h3>
+						<h3>Java 8</h3>
 <ul>
 <li>General availability in early 2014</li>
 <li>Early access available for download now</li>
-</ul>
+</ul><br/><br/>
+<h3>Groovy</h3>
+<ul><li>Has functional programming constructs now</li></ul><br/><br/>
+<h3>FunctionalJava library</h3>
+<ul><li>for Java 1.5+</li></ul>
 					</section>
+				<section>
 					<section>
 						<h3>Refactoring from External to Internal Iterator</h3>
 <pre><code data-trim>
@@ -62,26 +67,38 @@ for(int e : numbers) {
     System.out.println(e); 
 }
 </code></pre>
+					</section>
+					<section>
+						<h3>Internal Iterators</h3>
 
-<pre class="fragment"><code data-trim>
+<pre><code data-trim>
+List&lt;Integer&gt; numbers = Arrays.asList(1, 2, 3, 4, 5, 6);
+
 // forEach is a default method in Iterable interface
 numbers.forEach(new Consumer&lt;Integer&gt;() {
     public void accept(Integer number) { 
         System.out.println(number); 
     }
 });
+</code></pre>
 
+<pre class="fragment"><code data-trim>
 // because Consumer is a Functional Interface, 
 // anonymous class can be replaced by lambda expression
 numbers.forEach((Integer number) -&gt; System.out.println(number));
+</code></pre>
 
+<pre class="fragment"><code data-trim>
 // parameters' data types can be omitted
 numbers.forEach(number -&gt; System.out.println(number));
+</code></pre>
 
+<pre class="fragment"><code data-trim>
 // Method reference syntax
 numbers.forEach(System.out::println);
 </code></pre>
 					</section>
+				</section>
 					<section>
 						<h3>Eliminating Mutability</h3>
 <pre><code data-trim>
@@ -118,6 +135,12 @@ public class Asset {
   }
 }
 </code></pre>
+Given a list of Assets, want to calculate<br/>
+<ul>
+<li>total assets
+<li>total stock assets
+<li>total bond assets
+</ul>
 					</section>
 					<section>
 						<h3>The Old Way</h3>
@@ -157,25 +180,22 @@ public class Asset {
 					<section>
 						<h3>The New Way</h3>
 <pre><code data-trim>
-public static void totalAssets(
-		List&lt;Asset> assets, 
-		Predicate&lt;Asset> selector) {
-	System.out.println(
-		assets.stream()
-		.filter(selector)
-		.mapToInt(asset -> asset.value)
-		.sum());
+public static void totalAssets(List&lt;Asset> assets, 
+                               Predicate&lt;Asset> selector) {
+    System.out.println(
+        assets.stream()
+            .filter(selector)
+            .mapToInt(asset -> asset.value)
+            .sum());
 }
 </code></pre>
   
 <pre><code data-trim>
-public static void main(String[] args) {
-	List&lt;Asset> assets = Arrays.asList(
-		new Asset(Asset.AssetType.STOCK, 100),
-		new Asset(Asset.AssetType.BOND,  200),
-		new Asset(Asset.AssetType.STOCK, 300),
-		new Asset(Asset.AssetType.BOND,  400)
-);
+List&lt;Asset> assets = Arrays.asList(
+    new Asset(Asset.AssetType.STOCK, 100),
+    new Asset(Asset.AssetType.BOND,  200),
+    new Asset(Asset.AssetType.STOCK, 300),
+    new Asset(Asset.AssetType.BOND,  400);
 </code></pre>
     
     
@@ -190,31 +210,31 @@ totalAssets(assets, asset -> asset.type == Asset.AssetType.BOND);//600
 						<h3>Composing Lambda Expressions</h3>
 <pre><code data-trim>
 public static boolean isGreaterThan2(int number) {
-	return number > 2;
+    return number > 2;
 }
 
 public static boolean isEven(int number) {
-	return number % 2 == 0;
+    return number % 2 == 0;
 }
 
 public static int doubleIt(int number) {
-	return number * 2;
+    return number * 2;
 }
 </code></pre>
   
 <pre class="fragment"><code data-trim>
 public static void main(String[] args) {
-	List&lt;Integer> numbers = Arrays.asList(1, 2, 3, 4, 5, 6);
+    List&lt;Integer> numbers = Arrays.asList(1, 2, 3, 4, 5, 6);
 
-	//double the first even number greater than 2 from the list
-	System.out.println(
-		numbers.stream()
-			.filter(Sample::isGreaterThan2)
-			.filter(Sample::isEven)
-			.map(Sample::doubleIt)
-			.findFirst()
-			.get()
-	); //prints 8
+    //double the first even number greater than 2 from the list
+    System.out.println(
+        numbers.stream()
+            .filter(Sample::isGreaterThan2)
+            .filter(Sample::isEven)
+            .map(Sample::doubleIt)
+            .findFirst()
+            .get()
+    ); //prints 8
 }
 </code></pre>
 
@@ -224,18 +244,18 @@ public static void main(String[] args) {
 						<h3>Lazy Lambdas</h3>
 <pre><code data-trim>
 public static boolean isGreaterThan2(int number) {
-	System.out.println("isGreater " + number);
-	return number > 2;
+    System.out.println("isGreater " + number);
+    return number > 2;
 }
 
 public static boolean isEven(int number) {
-	System.out.println("isEven " + number);
-	return number % 2 == 0;
+    System.out.println("isEven " + number);
+    return number % 2 == 0;
 }
 
 public static int doubleIt(int number) {
-	System.out.println("doubleIt " + number);
-	return number * 2;
+    System.out.println("doubleIt " + number);
+    return number * 2;
 }
 </code></pre>
 					</section>
@@ -243,17 +263,17 @@ public static int doubleIt(int number) {
 						<h3>Lazy Lambdas</h3>
 <pre><code data-trim>
 public static void main(String[] args) {
-	List&lt;Integer> numbers = Arrays.asList(1, 2, 3, 4, 5, 6);
+    List&lt;Integer> numbers = Arrays.asList(1, 2, 3, 4, 5, 6);
 
-	//double the first even number greater than 2 from the list
-	System.out.println(
-		numbers.stream()
-			.filter(Sample::isGreaterThan2)
-			.filter(Sample::isEven)
-			.map(Sample::doubleIt)
-			.findFirst()
-			.get()
-	); //prints 8
+    //double the first even number greater than 2 from the list
+    System.out.println(
+        numbers.stream()
+            .filter(Sample::isGreaterThan2)
+            .filter(Sample::isEven)
+            .map(Sample::doubleIt)
+            .findFirst()
+            .get()
+    ); //prints 8
 }
 </code></pre>
 <pre class="fragment"><code data-trim>
@@ -278,60 +298,11 @@ numbers.parallelStream()
 
 					</section>
 
-
-
-					<section>
-						<h3>Currying</h3>
-						<p class="fragment">currying transforms a multi-argument function so that it can be called as a chain of single-argument functions</p>
-						<pre class="fragment"><code>
-def product = { x, y ->
-    return x * y
-}
-
-//always multiplying by 4?
-
-def quadrate = product.curry(4)
-
-// ==
-
-def altQuadrate = { x ->
-    return product(4, x)
-}
-						</code></pre>
-					</section>
-
-					<section>
-						<pre><code>
-def product = { x, y ->
-    return x * y
-}
-
-def quadrate = product.curry(4)
-def octate = product.curry(8)
-
-println "4x3: ${quadrate.call(3)}"
-println "8x5: ${octate(5)}"
-						</code></pre>
-					</section>
-					<section>
-						<h3>Partial Application</h3>
-						<p>partial application fixes a number of arguments to a function, producing another function of smaller arity</p>
-						<pre class="fragment"><code>
-def volume = { h, l, w ->
-    h * l * w
-}
-
-def area = volume.curry(1) // currying
-def length = volume.curry(1, 1) // partial application
-def alternateLength = volume.curry(1).curry(1) // currying
-
-						</code></pre>
-					</section>
-				</section>
 				<section>
-					<a href="http://docs.oracle.com/javase/tutorial/java/javaOO/lambdaexpressions.html">Lambda Expressions in Java 8</a>
-					<h3>Functional Thinking References:</h3>
-					<h4>Neal Ford</h4>
+					<h3>References</h3>
+					<a href="http://www.agiledeveloper.com/presentations/java_8_language_capabilities.zip">Venkat Subramaniam's Java 8 Language Features sample code</a>
+					<a href="http://docs.oracle.com/javase/tutorial/java/javaOO/lambdaexpressions.html">Lambda Expressions in Java 8</a><br/>
+					<a href="http://groovy.codehaus.org/Functional+Programming+with+Groovy">Functional Programming with Groovy</a><br/>
 					<a href="http://www.ibm.com/developerworks/java/library/j-ft1/index.html">functional thinking @ ibm.com</a><br />
 					<a href="https://github.com/benschw/functional-thinking-examples">code examples</a>
 					<br />
